@@ -27,11 +27,15 @@
     [self setNeedsStatusBarAppearanceUpdate];
     
     NSError *error = nil;
-    NSDictionary* fileAttributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:@"/"error:&error];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
     
-    unsigned long long freeSpace = [[fileAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
-    unsigned long long usedSpace = [[fileAttributes objectForKey:NSFileSystemSize] longLongValue] - [[fileAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
-    unsigned long long totalSpace = [[fileAttributes objectForKey:NSFileSystemSize] longLongValue];
+    NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+    NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+    uint64_t totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+    uint64_t freeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+    uint64_t usedSpace = totalSpace - freeSpace;
+    
     if (usedSpace > freeSpace) {
         freeSize.alpha = 0;
         freeCritical.alpha = 1;
