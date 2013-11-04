@@ -32,7 +32,6 @@
     unsigned long long freeSpace = [[fileAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
     unsigned long long usedSpace = [[fileAttributes objectForKey:NSFileSystemSize] longLongValue] - [[fileAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
     unsigned long long totalSpace = [[fileAttributes objectForKey:NSFileSystemSize] longLongValue];
-    NSLog(convertSpace(totalSpace));
     if (usedSpace > freeSpace) {
         freeSize.alpha = 0;
         freeCritical.alpha = 1;
